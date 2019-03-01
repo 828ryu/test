@@ -1,0 +1,49 @@
+# 内容とか後々追加予定
+# ADコンピュータ取得コマンド
+get-ADcomputer -filter * -Properties *| Format-Table Name,LastLogonDate | Out-File hogehoge.txt
+
+Search-ADAccount -AccountInactive -DateTime "yyyy/mm/dd" -ComputersOnly | Format-Table Name | Out-File hogehoge.txt
+
+
+# サービス取得コマンド
+Get-Service | Select-Object Name,DisplayName, Status | Export-CSV hogehoge.txt
+
+# ADユーザー情報収集
+Get-ADUser -filter * -searchbase "OU=ALL Users,DC=hogehoge,DC=com"| Out-File hogehoge.txt
+
+# AD名前、OU取得コマンド
+Get-ADUser -filter * -searchbase "OU=ほげほげ,OU=japan,OU=All Users,DC=hogehoge,DC=co,DC=jp" -Properties *|select-object displayname,DistinguishedName| Out-File hogehoge.txt
+
+
+# 更新プログラム一覧　出力
+Get-WmiObject win32_QuickFixEngineering　| Export-CSV hogehoge.csv
+
+
+# WSUS bit数
+get-wsuscomputer -IncludeDownstreamComputerTargets |Select-Object FullDomainName,IPAddress,LastSyncTime,OSArchitecture |Export-csv hogehoge.csv
+
+# フォルダアクセス権
+Get-ChildItem -Force -Recurse |Get-Acl | Select-object @{Label=”Path”;Expression={Convert-Path $_.Path}}, Owner, AccessToString  |Export-Csv hogehoge.csv
+
+Get-ChildItem -directory -Recurse |Get-Acl | Select-object @{Label="Path";Expression={Convert-Path $_.Path}}, AccessToString |Export-Csv -encoding default hogehoge.csv
+
+Get-ChildItem -Recurse |where { $_.mode -match “d” } |Get-Acl | Select-object @{Label="Path";Expression={Convert-Path $_.Path}}, AccessToString |Export-Csv -encoding default hogehoge.csv
+
+# ADユーザー一覧
+Get-ADUser -Filter * -SearchBase "DC=hogehoge,DC=co,DC=jp"| Select-Object DistinguishedName,Enabled,SamAccountName | Export-Csv hogehoge.csv -Encoding UTF8
+
+# フォルダ確認
+ Get-ChildItem D:\shares\hogehoge -Recurse -Directory | Out-File hogehoge.txt
+
+# フォルダアクセス権
+Get-ChildItem -Force -Recurse |Get-Acl | Select-object @{Label=”Path”;Expression={Convert-Path $_.Path}}, AccessToString  |Export-Csv hogehoge.csv -Encoding UTF8
+
+Get-ChildItem -Recurse |where { $_.mode -match “d" } |Get-Acl | Select-object @{Label="Path";Expression={Convert-Path $_.Path}}, AccessToString |Export-Csv -encoding default hogehoge.csv
+
+
+# グループメンバ確認
+Get-ADGroupMember -Identity group-name-hoge |Export-Csv hogehoge.csv -Encoding UTF8
+
+
+# ユーザー情報
+Get-ADUser -Identity username-hoge -Properties * | Select-object DisplayName,Company |Export-Csv hoge.csv -Encoding UTF8 -Append
